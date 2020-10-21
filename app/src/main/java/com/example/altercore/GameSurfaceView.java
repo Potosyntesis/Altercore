@@ -2,6 +2,7 @@ package com.example.altercore;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -21,9 +22,11 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
 
     Background background;
     BottomFloor floor;
+    MainCharacter mainCharacter;
 
     long time;
-    boolean isMoving = false;
+    public static boolean isMoving = false;
+    public static boolean isJump =  false;
 
     public GameSurfaceView(Context context) {
         super(context);
@@ -44,6 +47,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
         gestureDetector = new GestureDetector(this);
         background = new Background(getContext(),width,height);
         floor = new BottomFloor(getContext(),width,height);
+        mainCharacter = new MainCharacter(getContext(),R.drawable.player);
         thread.start();
     }
 
@@ -84,13 +88,12 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
 
     @Override
     public void update() {
-
         if(isMoving) {
             background.update();
             floor.update();
 
         }
-        Log.i("test",String.valueOf(isMoving));
+        //Log.i("test",String.valueOf(isMoving));
     }
 
     @Override
@@ -99,6 +102,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
             screenCanvas = holder.lockCanvas();
             background.render(screenCanvas);
             floor.render(screenCanvas);
+            mainCharacter.render(screenCanvas);
             holder.unlockCanvasAndPost(screenCanvas);
         }
     }
@@ -131,6 +135,8 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        isJump = true;
+        Log.d("Testing"," Fling is true" );
         return false;
     }
 }

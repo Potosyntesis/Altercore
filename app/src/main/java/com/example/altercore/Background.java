@@ -35,7 +35,7 @@ public class Background implements GameInterface{
     public void update() {
         for (Rect r:back_arr)
         {
-            r.offset(-15,0);
+            r.offset(-12,0);
             if(r.right<0){
                 r.offset(back.getWidth(),0);
             }

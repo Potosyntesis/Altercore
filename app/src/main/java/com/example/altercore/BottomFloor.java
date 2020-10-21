@@ -17,6 +17,7 @@ public class BottomFloor implements GameInterface{
     static int floorHeight = 0;
     Thread thread;
 
+    public static int floorLine = 0;
     ArrayList<Rect> floor_Arr = new ArrayList<>();
 
     Paint paint;
@@ -28,6 +29,7 @@ public class BottomFloor implements GameInterface{
         floor =BitmapFactory.decodeResource(context.getResources(),R.drawable.ground);
         floor = Bitmap.createScaledBitmap(floor,100,100,true);
 
+        floorLine = floor.getHeight();
         back_Rect = new Rect(0,0,bg.getWidth(),bg.getHeight());
 
         for (int i = 0; i<Math.ceil(bg.getWidth()/floor.getWidth())+2;i++){
@@ -40,7 +42,7 @@ public class BottomFloor implements GameInterface{
     @Override
     public void update() {
         for(Rect r:floor_Arr){
-            r.offset(-15,0);
+            r.offset(-14,0);
             if (r.right<0){
                 r.offset(back_Rect.width()+floor.getWidth(),0);
             }
