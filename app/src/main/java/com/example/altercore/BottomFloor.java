@@ -24,7 +24,7 @@ public class BottomFloor implements GameInterface{
 
 
     public BottomFloor(Context context, int width, int height){
-        bg = BitmapFactory.decodeResource(context.getResources(),R.drawable.background);
+        bg = BitmapFactory.decodeResource(context.getResources(),R.drawable.citybackground);
         bg = Bitmap.createScaledBitmap(bg,width,height,true);
         floor =BitmapFactory.decodeResource(context.getResources(),R.drawable.ground);
         floor = Bitmap.createScaledBitmap(floor,100,100,true);
@@ -42,7 +42,7 @@ public class BottomFloor implements GameInterface{
     @Override
     public void update() {
         for(Rect r:floor_Arr){
-            r.offset(-14,0);
+            r.offset(-15,0);
             if (r.right<0){
                 r.offset(back_Rect.width()+floor.getWidth(),0);
             }

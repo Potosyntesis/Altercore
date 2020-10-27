@@ -23,8 +23,9 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
     Background background;
     BottomFloor floor;
     MainCharacter mainCharacter;
+    Platforms platforms;
 
-    long time;
+    public static boolean onPlatform = false;
     public static boolean isMoving = false;
     public static boolean isJump =  false;
 
@@ -48,6 +49,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
         background = new Background(getContext(),width,height);
         floor = new BottomFloor(getContext(),width,height);
         mainCharacter = new MainCharacter(getContext(),R.drawable.player);
+        platforms = new Platforms(getContext(),width,height);
         thread.start();
     }
 
@@ -83,6 +85,11 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
                     e.printStackTrace();
                 }
                 update();
+//                if (platformCollision()){
+//                    onPlatform = true;
+//                }else{
+//                    onPlatform = false;
+//                }
             }
     }
 
@@ -91,7 +98,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
         if(isMoving) {
             background.update();
             floor.update();
-
+            platforms.update();
         }
         //Log.i("test",String.valueOf(isMoving));
     }
@@ -103,6 +110,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
             background.render(screenCanvas);
             floor.render(screenCanvas);
             mainCharacter.render(screenCanvas);
+            platforms.render(screenCanvas);
             holder.unlockCanvasAndPost(screenCanvas);
         }
     }
@@ -135,8 +143,24 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        isJump = true;
-        Log.d("Testing"," Fling is true" );
+        if (isJump == false) {
+            isJump = true;
+        }
+
         return false;
+    }
+
+
+
+
+
+
+    public boolean platformCollision(){
+        Rect player_copy = new Rect(mainCharacter.frameDest);
+        if (player_copy.intersect(platforms.plat_Rect)){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

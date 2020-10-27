@@ -11,10 +11,12 @@ import android.util.Log;
 import static com.example.altercore.BottomFloor.floorLine;
 import static com.example.altercore.GameSurfaceView.isJump;
 import static com.example.altercore.GameSurfaceView.isMoving;
+import static com.example.altercore.GameSurfaceView.onPlatform;
 
 public class MainCharacter implements GameInterface, Runnable{
 
     int updateRate = 9;
+    int jumpSpeed = -25;
     public static int GroundPoint;
     Rect frameSelect;
     Rect frameDest;
@@ -38,6 +40,7 @@ public class MainCharacter implements GameInterface, Runnable{
         }else{
             frameID.x = 2;
         }
+
         frameID.x %= frameSize.x;
         frameSelect = new Rect(frameID.x*main.getWidth()/frameSize.x,frameID.y*main.getHeight(),(frameID.x+1)*main.getWidth()/frameSize.x, main.getHeight());
 
@@ -45,22 +48,31 @@ public class MainCharacter implements GameInterface, Runnable{
 
     @Override
     public void render(Canvas canvas) {
-        GroundPoint = (canvas.getHeight()-main.getHeight())-floorLine;
-        //Log.i("test",String.valueOf(onGround));
-        if(isJump == false) {
-            if (frameDest.top < GroundPoint) {
-                frameDest.offset(0, 20);
+        GroundPoint = (canvas.getHeight() - main.getHeight()) - floorLine;
+
+
+
+        //Jump function
+        if (isJump) {
+            if (jumpSpeed <= 20) {
+                if(onPlatform){
+                    frameDest.offset(0, 0);
+                }else{
+                    frameDest.offset(0, jumpSpeed);
+                    jumpSpeed++;
+                }
             } else {
-                frameDest.offsetTo(300, GroundPoint);
-            }
-        }else{
-            if(frameDest.top>GroundPoint-300){
-                frameDest.offset(0, -20);
-            }else{
+                jumpSpeed = -25;
                 isJump = false;
             }
+        }else if (frameDest.top < GroundPoint) {
+            frameDest.offset(0, 20);
+        } else {
+            frameDest.offsetTo(300, GroundPoint);
         }
-        canvas.drawBitmap(main,frameSelect,frameDest,null);
+
+
+        canvas.drawBitmap(main, frameSelect, frameDest, null);
     }
 
     @Override
