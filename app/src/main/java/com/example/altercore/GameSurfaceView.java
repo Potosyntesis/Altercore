@@ -9,8 +9,11 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
+
+import static com.example.altercore.MainCharacter.screenMove;
 
 public class GameSurfaceView extends SurfaceView implements GameInterface,SurfaceHolder.Callback,Runnable, View.OnTouchListener , GestureDetector.OnGestureListener {
 
@@ -24,10 +27,12 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
     BottomFloor floor;
     MainCharacter mainCharacter;
     Platforms platforms;
+    Buttons buttons;
 
     public static boolean onPlatform = false;
     public static boolean isMoving = false;
     public static boolean isJump =  false;
+    public static boolean moveLeft = false, moveRight = false, aPress = false, bPress = false;
 
     public GameSurfaceView(Context context) {
         super(context);
@@ -48,8 +53,9 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
         gestureDetector = new GestureDetector(this);
         background = new Background(getContext(),width,height);
         floor = new BottomFloor(getContext(),width,height);
-        mainCharacter = new MainCharacter(getContext(),R.drawable.player);
+        mainCharacter = new MainCharacter(getContext(),R.drawable.player,width);
         platforms = new Platforms(getContext(),width,height);
+        buttons = new Buttons(getContext());
         thread.start();
     }
 
@@ -63,11 +69,33 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
     public boolean onTouch(View view, MotionEvent event) {
         gestureDetector.onTouchEvent(event);
 
+        if (buttons.buttonLeft_r.contains((int)event.getX(),(int)event.getY())){
+            isMoving = true;
+            moveLeft = true;
+        }
+
+        if (buttons.buttonRight_r.contains((int)event.getX(),(int)event.getY())){
+            isMoving = true;
+            moveRight = true;
+        }
+
+        if (buttons.buttonA_r.contains((int)event.getX(),(int)event.getY())){
+
+        }
+
+        if (buttons.buttonB_r.contains((int)event.getX(),(int)event.getY())){
+
+        }
+
         switch (event.getAction())
         {
             case MotionEvent.ACTION_UP:
             {
                 isMoving =false;
+                moveLeft = false;
+                moveRight = false;
+                aPress = false;
+                bPress = false;
             }
         }
         return true;
@@ -85,22 +113,23 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
                     e.printStackTrace();
                 }
                 update();
-//                if (platformCollision()){
-//                    onPlatform = true;
-//                }else{
-//                    onPlatform = false;
-//                }
+                if (platformCollision()){
+                    onPlatform = true;
+                }else{
+                    onPlatform = false;
+                }
+                //Log.i("On Platform:",String.valueOf(onPlatform));
             }
     }
 
     @Override
     public void update() {
-        if(isMoving) {
+        if(isMoving && screenMove) {
             background.update();
             floor.update();
             platforms.update();
         }
-        //Log.i("test",String.valueOf(isMoving));
+        Log.i("test","is Moving = "+isMoving+ ", moveLeft = "+moveLeft+", moveRight = "+moveRight);
     }
 
     @Override
@@ -111,13 +140,14 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
             floor.render(screenCanvas);
             mainCharacter.render(screenCanvas);
             platforms.render(screenCanvas);
+            buttons.render(screenCanvas);
             holder.unlockCanvasAndPost(screenCanvas);
         }
     }
 
     @Override
     public boolean onDown(MotionEvent e) {
-        isMoving = true;
+        //isMoving = true;
         return true;
     }
 
@@ -143,21 +173,28 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        if (isJump == false) {
-            isJump = true;
-        }
+        float deltaX, deltaY;
+        deltaX = e1.getX()+velocityX - e2.getX()+velocityY;
+        deltaY = e1.getY()+velocityX- e2.getY()+velocityY;
+        double degree = Math.atan2(deltaY,deltaX);
+        int deg = (int) Math.toDegrees(degree);
+        Log.i("Testing"," Fling "+ deltaX +"    "+deltaY+ "tan   "+deg + " deg" );
 
+        if(deg>50 && deg<130) {
+            if (isJump == false) {
+                isJump = true;
+            }
+        }
         return false;
     }
 
 
-
-
-
-
     public boolean platformCollision(){
         Rect player_copy = new Rect(mainCharacter.frameDest);
-        if (player_copy.intersect(platforms.plat_Rect)){
+        Rect plat_copy = new Rect(platforms.plat_Rect);
+        plat_copy.set(plat_copy.left,plat_copy.top + (plat_copy.height()/2),plat_copy.right,plat_copy.bottom);
+        if (plat_copy.intersect(player_copy.left,player_copy.top+player_copy.height()+plat_copy.height(),player_copy.right,player_copy.bottom +plat_copy.height()))
+        {
             return true;
         }else{
             return false;

@@ -9,6 +9,9 @@ import android.graphics.Rect;
 
 import java.util.ArrayList;
 
+import static com.example.altercore.GameSurfaceView.moveLeft;
+import static com.example.altercore.GameSurfaceView.moveRight;
+
 public class BottomFloor implements GameInterface{
 
     Bitmap bg,floor;
@@ -16,6 +19,8 @@ public class BottomFloor implements GameInterface{
     Canvas thisCanvas;
     static int floorHeight = 0;
     Thread thread;
+
+    int canvas_x;
 
     public static int floorLine = 0;
     ArrayList<Rect> floor_Arr = new ArrayList<>();
@@ -28,6 +33,8 @@ public class BottomFloor implements GameInterface{
         bg = Bitmap.createScaledBitmap(bg,width,height,true);
         floor =BitmapFactory.decodeResource(context.getResources(),R.drawable.ground);
         floor = Bitmap.createScaledBitmap(floor,100,100,true);
+
+        canvas_x = width;
 
         floorLine = floor.getHeight();
         back_Rect = new Rect(0,0,bg.getWidth(),bg.getHeight());
@@ -42,9 +49,13 @@ public class BottomFloor implements GameInterface{
     @Override
     public void update() {
         for(Rect r:floor_Arr){
-            r.offset(-15,0);
-            if (r.right<0){
-                r.offset(back_Rect.width()+floor.getWidth(),0);
+            if(moveRight) {
+                r.offset(-15, 0);
+                if (r.right < 0) {
+                    r.offset(back_Rect.width() + floor.getWidth(), 0);
+                }
+            }else if (moveLeft){
+                r.offset(0,0);
             }
         }
     }

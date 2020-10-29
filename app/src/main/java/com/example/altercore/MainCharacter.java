@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
@@ -11,26 +12,40 @@ import android.util.Log;
 import static com.example.altercore.BottomFloor.floorLine;
 import static com.example.altercore.GameSurfaceView.isJump;
 import static com.example.altercore.GameSurfaceView.isMoving;
+import static com.example.altercore.GameSurfaceView.moveLeft;
+import static com.example.altercore.GameSurfaceView.moveRight;
 import static com.example.altercore.GameSurfaceView.onPlatform;
 
 public class MainCharacter implements GameInterface, Runnable{
 
     int updateRate = 9;
     int jumpSpeed = -25;
+    int canvas_x;
     public static int GroundPoint;
+    public static boolean screenMove = false;
+    boolean onGround = false;
+    boolean justLanded = true;
+
+    Matrix matrix;
     Rect frameSelect;
     Rect frameDest;
     Point frameID = new Point();
     Point frameSize = new Point(3,1);
-    Bitmap main;
+    Bitmap main, main_ani;
 
-    public MainCharacter(Context context, int shape){
+    public MainCharacter(Context context, int shape, int width){
         main = BitmapFactory.decodeResource(context.getResources(),shape);
         main = Bitmap.createScaledBitmap(main,480,150,true);
+
+        canvas_x = width;
+
         frameSelect = new Rect(0,0,(main.getWidth()/frameSize.x),main.getHeight());
+
         frameDest = new Rect(frameSelect);
-        frameDest.offsetTo(300,0);
+        frameDest.offsetTo(canvas_x/2,0);
+
         new Thread(this).start();
+        matrix = new Matrix();
     }
 
     @Override
@@ -50,27 +65,66 @@ public class MainCharacter implements GameInterface, Runnable{
     public void render(Canvas canvas) {
         GroundPoint = (canvas.getHeight() - main.getHeight()) - floorLine;
 
+        if (moveRight){
+            matrix.preScale(1.0f,1.0f);
+            if(frameDest.left<canvas_x/2){
+                frameDest.offset(15,0);
+                screenMove = false;
+            }else{
+                frameDest.offsetTo(canvas_x/2,frameDest.top);
+                screenMove = true;
+            }
+        }else if (moveLeft){
+            matrix.preScale(-1.0f,1.0f);
 
+            if(frameDest.left>0){
+                frameDest.offset(-15,0);
+                screenMove = false;
+            }else{
+                frameDest.offsetTo(0,frameDest.top);
+                screenMove = false;
+            }
+        }
+        main = Bitmap.createBitmap(main,0,0,main.getWidth(),main.getHeight(),matrix,false);
+//        Log.i("Frame Dest: ",String.valueOf(frameDest));
 
-        //Jump function
-        if (isJump) {
-            if (jumpSpeed <= 20) {
-                if(onPlatform){
-                    frameDest.offset(0, 0);
-                }else{
+        if(!onPlatform) {
+            justLanded = true;
+            if (isJump) {
+                onGround = false;
+                if (jumpSpeed <= 20) {
                     frameDest.offset(0, jumpSpeed);
                     jumpSpeed++;
+                } else {
+                    jumpSpeed = -25;
+                    isJump = false;
                 }
-            } else {
+            } else if (frameDest.top < GroundPoint) {
+                frameDest.offset(0, 20);
+            } else if (frameDest.top >= GroundPoint) {
+                onGround = true;
+                frameDest.offsetTo(frameDest.left, GroundPoint);
+            }
+        }else{
+            if(justLanded) {
                 jumpSpeed = -25;
                 isJump = false;
+                onGround = true;
+                justLanded = false;
             }
-        }else if (frameDest.top < GroundPoint) {
-            frameDest.offset(0, 20);
-        } else {
-            frameDest.offsetTo(300, GroundPoint);
+            if (isJump) {
+                onGround = false;
+                if (jumpSpeed <= 20) {
+                    frameDest.offset(0, jumpSpeed);
+                    jumpSpeed++;
+                } else {
+                    jumpSpeed = -25;
+                    isJump = false;
+                }
+            } else{
+                frameDest.offset(0, 0);
+            }
         }
-
 
         canvas.drawBitmap(main, frameSelect, frameDest, null);
     }

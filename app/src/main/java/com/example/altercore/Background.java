@@ -9,6 +9,9 @@ import android.graphics.Rect;
 
 import java.util.ArrayList;
 
+import static com.example.altercore.GameSurfaceView.moveLeft;
+import static com.example.altercore.GameSurfaceView.moveRight;
+
 public class Background implements GameInterface{
 
     Bitmap back;
@@ -35,9 +38,14 @@ public class Background implements GameInterface{
     public void update() {
         for (Rect r:back_arr)
         {
-            r.offset(-10,0);
-            if(r.right<0){
-                r.offset(back.getWidth(),0);
+            if(moveRight) {
+                r.offset(-10, 0);
+                if (r.right < 0) {
+                    r.offsetTo(back.getWidth(), 0);
+                }
+            }else if (moveLeft){
+                r.offset(0, 0);
+
             }
         }
     }

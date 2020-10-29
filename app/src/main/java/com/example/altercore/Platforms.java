@@ -6,6 +6,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
+import static com.example.altercore.GameSurfaceView.moveLeft;
+import static com.example.altercore.GameSurfaceView.moveRight;
+
 public class Platforms implements GameInterface{
 
     boolean first = true;
@@ -26,7 +29,12 @@ public class Platforms implements GameInterface{
 
     @Override
     public void update() {
-        plat_Rect.offset(-15,0);
+        if (moveRight) {
+            plat_Rect.offset(-15, 0);
+        }else if (moveLeft){
+            plat_Rect.offset(0,0);
+        }
+
     }
 
     @Override
