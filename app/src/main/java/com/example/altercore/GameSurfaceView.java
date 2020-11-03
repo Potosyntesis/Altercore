@@ -191,10 +191,21 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
 
     public boolean platformCollision(){
         Rect player_copy = new Rect(mainCharacter.frameDest);
-        Rect plat_copy = new Rect(platforms.plat_Rect);
-        plat_copy.set(plat_copy.left,plat_copy.top + (plat_copy.height()/2),plat_copy.right,plat_copy.bottom);
-        if (plat_copy.intersect(player_copy.left,player_copy.top+player_copy.height()+plat_copy.height(),player_copy.right,player_copy.bottom +plat_copy.height()))
+
+        Rect plat_copy1 = new Rect(platforms.plat_Rect1);
+        Rect plat_copy2 = new Rect(platforms.plat_Rect2);
+        Rect plat_copy3 = new Rect(platforms.plat_Rect3);
+
+        plat_copy1.set(plat_copy1.left,plat_copy1.top + (plat_copy1.height()/2),plat_copy1.right,plat_copy1.bottom);
+        plat_copy2.set(plat_copy2.left,plat_copy2.top + (plat_copy2.height()/2),plat_copy2.right,plat_copy2.bottom);
+        plat_copy3.set(plat_copy3.left,plat_copy3.top + (plat_copy3.height()/2),plat_copy3.right,plat_copy3.bottom);
+
+        if (plat_copy1.intersect(player_copy.left,player_copy.top+player_copy.height()+plat_copy1.height(),player_copy.right,player_copy.bottom +plat_copy1.height()))
         {
+            return true;
+        }else if (plat_copy2.intersect(player_copy.left,player_copy.top+player_copy.height()+plat_copy2.height(),player_copy.right,player_copy.bottom +plat_copy2.height())){
+            return true;
+        }else if (plat_copy3.intersect(player_copy.left,player_copy.top+player_copy.height()+plat_copy3.height(),player_copy.right,player_copy.bottom +plat_copy3.height())){
             return true;
         }else{
             return false;

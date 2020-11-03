@@ -25,6 +25,7 @@ public class MainCharacter implements GameInterface, Runnable{
     public static boolean screenMove = false;
     boolean onGround = false;
     boolean justLanded = true;
+    boolean lookRight = true;
 
     Matrix matrix;
     Rect frameSelect;
@@ -37,12 +38,13 @@ public class MainCharacter implements GameInterface, Runnable{
         main = BitmapFactory.decodeResource(context.getResources(),shape);
         main = Bitmap.createScaledBitmap(main,480,150,true);
 
+
         canvas_x = width;
 
         frameSelect = new Rect(0,0,(main.getWidth()/frameSize.x),main.getHeight());
 
         frameDest = new Rect(frameSelect);
-        frameDest.offsetTo(canvas_x/2,0);
+        frameDest.offsetTo(canvas_x/3,0);
 
         new Thread(this).start();
         matrix = new Matrix();
@@ -66,17 +68,16 @@ public class MainCharacter implements GameInterface, Runnable{
         GroundPoint = (canvas.getHeight() - main.getHeight()) - floorLine;
 
         if (moveRight){
-            matrix.preScale(1.0f,1.0f);
-            if(frameDest.left<canvas_x/2){
+            lookRight = true;
+            if(frameDest.left<canvas_x/3){
                 frameDest.offset(15,0);
                 screenMove = false;
             }else{
-                frameDest.offsetTo(canvas_x/2,frameDest.top);
+                frameDest.offsetTo((canvas_x/3),frameDest.top);
                 screenMove = true;
             }
         }else if (moveLeft){
-            matrix.preScale(-1.0f,1.0f);
-
+            lookRight = false;
             if(frameDest.left>0){
                 frameDest.offset(-15,0);
                 screenMove = false;
@@ -85,7 +86,6 @@ public class MainCharacter implements GameInterface, Runnable{
                 screenMove = false;
             }
         }
-        main = Bitmap.createBitmap(main,0,0,main.getWidth(),main.getHeight(),matrix,false);
 //        Log.i("Frame Dest: ",String.valueOf(frameDest));
 
         if(!onPlatform) {
@@ -93,6 +93,9 @@ public class MainCharacter implements GameInterface, Runnable{
             if (isJump) {
                 onGround = false;
                 if (jumpSpeed <= 20) {
+                    if (frameDest.top<0){
+                        jumpSpeed = 20;
+                    }
                     frameDest.offset(0, jumpSpeed);
                     jumpSpeed++;
                 } else {
@@ -115,6 +118,9 @@ public class MainCharacter implements GameInterface, Runnable{
             if (isJump) {
                 onGround = false;
                 if (jumpSpeed <= 20) {
+                    if (frameDest.top<0){
+                        jumpSpeed = 20;
+                    }
                     frameDest.offset(0, jumpSpeed);
                     jumpSpeed++;
                 } else {
@@ -137,5 +143,9 @@ public class MainCharacter implements GameInterface, Runnable{
                 Thread.sleep(1000/updateRate);
             }catch (Exception e){}
         }
+    }
+
+    private void rangedAttack(){
+
     }
 }
