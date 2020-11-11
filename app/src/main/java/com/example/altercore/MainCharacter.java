@@ -16,7 +16,11 @@ import static com.example.altercore.GameSurfaceView.moveLeft;
 import static com.example.altercore.GameSurfaceView.moveRight;
 import static com.example.altercore.GameSurfaceView.onPlatform;
 
+
+
 public class MainCharacter implements GameInterface, Runnable{
+
+    playerProjectile projectile;
 
     int updateRate = 9;
     int jumpSpeed = -25;
@@ -26,15 +30,17 @@ public class MainCharacter implements GameInterface, Runnable{
     boolean onGround = false;
     boolean justLanded = true;
     boolean lookRight = true;
+    boolean setProj = false;
 
-    Matrix matrix;
     Rect frameSelect;
     Rect frameDest;
     Point frameID = new Point();
     Point frameSize = new Point(3,1);
-    Bitmap main, main_ani;
+    Bitmap main;
 
     public MainCharacter(Context context, int shape, int width){
+        projectile = new playerProjectile(context);
+
         main = BitmapFactory.decodeResource(context.getResources(),shape);
         main = Bitmap.createScaledBitmap(main,480,150,true);
 
@@ -47,7 +53,6 @@ public class MainCharacter implements GameInterface, Runnable{
         frameDest.offsetTo(canvas_x/3,0);
 
         new Thread(this).start();
-        matrix = new Matrix();
     }
 
     @Override
@@ -132,6 +137,17 @@ public class MainCharacter implements GameInterface, Runnable{
             }
         }
 
+        if(!projectile.fire) {
+            Rect Proj_copy = new Rect(projectile.playerProj_rect);
+            if (!Proj_copy.intersect(frameDest)) {
+                projectile.playerProj_rect.offsetTo(frameDest.left, frameDest.top+60);
+
+            }
+        }
+
+
+        projectile.render(canvas);
+        projectile.update();
         canvas.drawBitmap(main, frameSelect, frameDest, null);
     }
 

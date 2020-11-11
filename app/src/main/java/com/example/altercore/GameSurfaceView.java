@@ -28,11 +28,13 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
     MainCharacter mainCharacter;
     Platforms platforms;
     Buttons buttons;
+    RangedEnemy rangedEnemy;
 
     public static boolean onPlatform = false;
     public static boolean isMoving = false;
     public static boolean isJump =  false;
     public static boolean moveLeft = false, moveRight = false, aPress = false, bPress = false;
+    public static boolean rangedAttack = false;
 
     public GameSurfaceView(Context context) {
         super(context);
@@ -54,6 +56,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
         background = new Background(getContext(),width,height);
         floor = new BottomFloor(getContext(),width,height);
         mainCharacter = new MainCharacter(getContext(),R.drawable.player,width);
+        rangedEnemy = new RangedEnemy(getContext());
         platforms = new Platforms(getContext(),width,height);
         buttons = new Buttons(getContext());
         thread.start();
@@ -84,7 +87,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
         }
 
         if (buttons.buttonB_r.contains((int)event.getX(),(int)event.getY())){
-
+            rangedAttack = true;
         }
 
         switch (event.getAction())
@@ -92,6 +95,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
             case MotionEvent.ACTION_UP:
             {
                 isMoving =false;
+                rangedAttack = false;
                 moveLeft = false;
                 moveRight = false;
                 aPress = false;
@@ -139,6 +143,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
             background.render(screenCanvas);
             floor.render(screenCanvas);
             mainCharacter.render(screenCanvas);
+            rangedEnemy.render(screenCanvas);
             platforms.render(screenCanvas);
             buttons.render(screenCanvas);
             holder.unlockCanvasAndPost(screenCanvas);
