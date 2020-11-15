@@ -12,7 +12,9 @@ import java.util.Random;
 import static com.example.altercore.GameSurfaceView.moveLeft;
 import static com.example.altercore.GameSurfaceView.moveRight;
 
-public class Platforms implements GameInterface{
+public class PlatformSet1 implements GameInterface{
+
+    RangedEnemy enemySpawn1, enemySpawn2;
 
     boolean first = true;
     int screen_sect;
@@ -21,9 +23,14 @@ public class Platforms implements GameInterface{
     Random rand;
 
     int array_counter = 0;
-    int[] PlatformPlacment = {3,2,1,2,2,1,1,2,3,2,3,1};
+    int[] PlatformPlacment = {3,2,1,2,2,1,3,2,3,2,3,1};
 
-    public Platforms(Context context, int width, int height){
+
+    public PlatformSet1(Context context, int width, int height){
+
+        enemySpawn1 = new RangedEnemy(context);
+        enemySpawn2 = new RangedEnemy(context);
+
         back = BitmapFactory.decodeResource(context.getResources(),R.drawable.citybackground);
         back = Bitmap.createScaledBitmap(back,width,height,true);
 
@@ -66,12 +73,17 @@ public class Platforms implements GameInterface{
                 }
             }
 
+            if(enemySpawn1.enemy_rect.right < 0){
+                enemySpawn1.enemy_rect.offsetTo(plat_Rect2.left+(plat_Rect2.width()/2),plat_Rect2.top-enemySpawn1.enemy_rect.height());
+            }
+
 
         }else if (moveLeft){
             plat_Rect1.offset(0,0);
             plat_Rect2.offset(0, 0);
             plat_Rect3.offset(0, 0);
         }
+        enemySpawn1.update();
 
     }
 
@@ -86,12 +98,16 @@ public class Platforms implements GameInterface{
             plat_Rect3.offsetTo(plat_Rect2.right+250, (screen_sect * PlatformPlacment[array_counter])-platform.getHeight());
             array_counter++;
 
+            enemySpawn1.enemy_rect.offsetTo(plat_Rect2.left+(plat_Rect2.width()/2),plat_Rect2.top-enemySpawn1.enemy_rect.height());
+
             first = false;
         }
         canvas.drawBitmap(platform,null,plat_Rect1,null);
         canvas.drawBitmap(platform2,null,plat_Rect2,null);
         canvas.drawBitmap(platform3,null,plat_Rect3,null);
 
+        enemySpawn1.render(canvas);
+//        enemySpawn2.render(canvas);
 
     }
 }

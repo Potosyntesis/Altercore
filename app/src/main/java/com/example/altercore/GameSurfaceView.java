@@ -9,7 +9,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 
@@ -26,7 +25,9 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
     Background background;
     BottomFloor floor;
     MainCharacter mainCharacter;
-    Platforms platforms;
+    PlatformSet1 platformSet1;
+    PlatformSet2 platformSet2;
+    ProgressBar progressBar;
     Buttons buttons;
     RangedEnemy rangedEnemy;
 
@@ -56,8 +57,10 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
         background = new Background(getContext(),width,height);
         floor = new BottomFloor(getContext(),width,height);
         mainCharacter = new MainCharacter(getContext(),R.drawable.player,width);
-        rangedEnemy = new RangedEnemy(getContext());
-        platforms = new Platforms(getContext(),width,height);
+//        rangedEnemy = new RangedEnemy(getContext());
+        platformSet1 = new PlatformSet1(getContext(),width,height);
+        platformSet2 = new PlatformSet2(getContext(),width,height);
+        progressBar = new ProgressBar(getContext(),width,height);
         buttons = new Buttons(getContext());
         thread.start();
     }
@@ -117,7 +120,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
                     e.printStackTrace();
                 }
                 update();
-                if (platformCollision()){
+                if (platformCollision1() || platformCollision2()){
                     onPlatform = true;
                 }else{
                     onPlatform = false;
@@ -131,7 +134,10 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
         if(isMoving && screenMove) {
             background.update();
             floor.update();
-            platforms.update();
+            platformSet1.update();
+            platformSet2.update();
+            progressBar.update();
+//            rangedEnemy.update();
         }
         Log.i("test","is Moving = "+isMoving+ ", moveLeft = "+moveLeft+", moveRight = "+moveRight);
     }
@@ -143,8 +149,10 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
             background.render(screenCanvas);
             floor.render(screenCanvas);
             mainCharacter.render(screenCanvas);
-            rangedEnemy.render(screenCanvas);
-            platforms.render(screenCanvas);
+//            rangedEnemy.render(screenCanvas);
+            platformSet1.render(screenCanvas);
+            platformSet2.render(screenCanvas);
+            progressBar.render(screenCanvas);
             buttons.render(screenCanvas);
             holder.unlockCanvasAndPost(screenCanvas);
         }
@@ -152,7 +160,6 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
 
     @Override
     public boolean onDown(MotionEvent e) {
-        //isMoving = true;
         return true;
     }
 
@@ -194,12 +201,35 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
     }
 
 
-    public boolean platformCollision(){
+    public boolean platformCollision1(){
         Rect player_copy = new Rect(mainCharacter.frameDest);
 
-        Rect plat_copy1 = new Rect(platforms.plat_Rect1);
-        Rect plat_copy2 = new Rect(platforms.plat_Rect2);
-        Rect plat_copy3 = new Rect(platforms.plat_Rect3);
+        Rect plat_copy1 = new Rect(platformSet1.plat_Rect1);
+        Rect plat_copy2 = new Rect(platformSet1.plat_Rect2);
+        Rect plat_copy3 = new Rect(platformSet1.plat_Rect3);
+
+        plat_copy1.set(plat_copy1.left,plat_copy1.top + (plat_copy1.height()/2),plat_copy1.right,plat_copy1.bottom);
+        plat_copy2.set(plat_copy2.left,plat_copy2.top + (plat_copy2.height()/2),plat_copy2.right,plat_copy2.bottom);
+        plat_copy3.set(plat_copy3.left,plat_copy3.top + (plat_copy3.height()/2),plat_copy3.right,plat_copy3.bottom);
+
+        if (plat_copy1.intersect(player_copy.left,player_copy.top+player_copy.height()+plat_copy1.height(),player_copy.right,player_copy.bottom +plat_copy1.height()))
+        {
+            return true;
+        }else if (plat_copy2.intersect(player_copy.left,player_copy.top+player_copy.height()+plat_copy2.height(),player_copy.right,player_copy.bottom +plat_copy2.height())){
+            return true;
+        }else if (plat_copy3.intersect(player_copy.left,player_copy.top+player_copy.height()+plat_copy3.height(),player_copy.right,player_copy.bottom +plat_copy3.height())){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public boolean platformCollision2(){
+        Rect player_copy = new Rect(mainCharacter.frameDest);
+
+        Rect plat_copy1 = new Rect(platformSet2.plat_Rect1);
+        Rect plat_copy2 = new Rect(platformSet2.plat_Rect2);
+        Rect plat_copy3 = new Rect(platformSet2.plat_Rect3);
 
         plat_copy1.set(plat_copy1.left,plat_copy1.top + (plat_copy1.height()/2),plat_copy1.right,plat_copy1.bottom);
         plat_copy2.set(plat_copy2.left,plat_copy2.top + (plat_copy2.height()/2),plat_copy2.right,plat_copy2.bottom);
