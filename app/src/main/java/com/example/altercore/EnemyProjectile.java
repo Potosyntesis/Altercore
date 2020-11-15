@@ -23,25 +23,19 @@ public class EnemyProjectile implements GameInterface{
         paint = new Paint();
 
         paint.setAntiAlias(false);
+        paint.setAlpha(255);
 
     }
 
     @Override
     public void update() {
-        paint.setAlpha(255);
-
-        if (!offScreen) {
-            enemyProj_rect.offset(-50, 0);
-        }
+//        paint.setAlpha(255);
+        enemyProj_rect.offset(-35,0);
     }
 
     @Override
     public void render(Canvas canvas) {
         canvas.drawBitmap(enemyProjectile,null,enemyProj_rect,paint);
 
-        if(enemyProj_rect.right<0){
-            paint.setAlpha(0);
-            offScreen = true;
-        }
     }
 }

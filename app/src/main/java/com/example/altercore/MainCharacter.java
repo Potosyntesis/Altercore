@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
@@ -35,22 +36,25 @@ public class MainCharacter implements GameInterface, Runnable{
     Rect frameSelect;
     Rect frameDest;
     Point frameID = new Point();
-    Point frameSize = new Point(3,1);
+    Point frameSize = new Point(4,3);
     Bitmap main;
+    Paint paint;
 
     public MainCharacter(Context context, int shape, int width){
         projectile = new playerProjectile(context);
 
         main = BitmapFactory.decodeResource(context.getResources(),shape);
-        main = Bitmap.createScaledBitmap(main,480,150,true);
+        main = Bitmap.createScaledBitmap(main,main.getWidth()*2,main.getHeight()*2,true);
 
 
         canvas_x = width;
 
-        frameSelect = new Rect(0,0,(main.getWidth()/frameSize.x),main.getHeight());
+        frameSelect = new Rect(0,0,(main.getWidth()/frameSize.x),(main.getHeight()/frameSize.y));
 
         frameDest = new Rect(frameSelect);
         frameDest.offsetTo(canvas_x/3,0);
+
+        paint = new Paint();
 
         new Thread(this).start();
     }
@@ -148,7 +152,7 @@ public class MainCharacter implements GameInterface, Runnable{
 
         projectile.render(canvas);
         projectile.update();
-        canvas.drawBitmap(main, frameSelect, frameDest, null);
+        canvas.drawBitmap(main, frameSelect, frameDest, paint);
     }
 
     @Override

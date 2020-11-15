@@ -31,8 +31,11 @@ public class BottomFloor implements GameInterface{
     public BottomFloor(Context context, int width, int height){
         bg = BitmapFactory.decodeResource(context.getResources(),R.drawable.citybackground);
         bg = Bitmap.createScaledBitmap(bg,width,height,true);
-        floor =BitmapFactory.decodeResource(context.getResources(),R.drawable.ground);
+        floor =BitmapFactory.decodeResource(context.getResources(),R.drawable.groundtile);
         floor = Bitmap.createScaledBitmap(floor,100,100,true);
+
+        paint = new Paint();
+        paint.setAntiAlias(false);
 
         canvas_x = width;
 
@@ -65,7 +68,7 @@ public class BottomFloor implements GameInterface{
         thisCanvas = canvas;
 
         for(Rect r:floor_Arr){
-            canvas.drawBitmap(floor,null,r,null);
+            canvas.drawBitmap(floor,null,r,paint);
             floorHeight = floor.getHeight();
         }
     }

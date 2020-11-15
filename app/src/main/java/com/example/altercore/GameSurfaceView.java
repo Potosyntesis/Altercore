@@ -56,7 +56,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
         gestureDetector = new GestureDetector(this);
         background = new Background(getContext(),width,height);
         floor = new BottomFloor(getContext(),width,height);
-        mainCharacter = new MainCharacter(getContext(),R.drawable.player,width);
+        mainCharacter = new MainCharacter(getContext(),R.drawable.playerani,width);
 //        rangedEnemy = new RangedEnemy(getContext());
         platformSet1 = new PlatformSet1(getContext(),width,height);
         platformSet2 = new PlatformSet2(getContext(),width,height);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
 
 import java.util.Random;
@@ -18,6 +19,7 @@ public class PlatformSet2 implements GameInterface{
     Rect back_rect,plat_Rect1,plat_Rect2,plat_Rect3;
     Bitmap back,platform, platform2, platform3;
     Random rand;
+    Paint paint;
 
     int array_counter = 0;
     int[] PlatformPlacment = {2,1,3,3,1,2,1,3,1,3,2,3};
@@ -26,13 +28,13 @@ public class PlatformSet2 implements GameInterface{
         back = BitmapFactory.decodeResource(context.getResources(),R.drawable.citybackground);
         back = Bitmap.createScaledBitmap(back,width,height,true);
 
-        platform = BitmapFactory.decodeResource(context.getResources(),R.drawable.platform);
+        platform = BitmapFactory.decodeResource(context.getResources(),R.drawable.platforms);
         platform = Bitmap.createScaledBitmap(platform,back.getWidth()/3,(platform.getHeight()/3)*2,true);
 
-        platform2 = BitmapFactory.decodeResource(context.getResources(),R.drawable.platform);
+        platform2 = BitmapFactory.decodeResource(context.getResources(),R.drawable.platforms);
         platform2 = Bitmap.createScaledBitmap(platform2,back.getWidth()/3,(platform2.getHeight()/3)*2,true);
 
-        platform3 = BitmapFactory.decodeResource(context.getResources(),R.drawable.platform);
+        platform3 = BitmapFactory.decodeResource(context.getResources(),R.drawable.platforms);
         platform3 = Bitmap.createScaledBitmap(platform3,back.getWidth()/3,(platform3.getHeight()/3)*2,true);
 
         back_rect = new Rect(0,0,back.getWidth(),back.getHeight());
@@ -41,6 +43,8 @@ public class PlatformSet2 implements GameInterface{
         plat_Rect3 = new Rect(0,0,platform3.getWidth(),platform3.getHeight());
 
         rand = new Random();
+        paint = new Paint();
+        paint.setAntiAlias(false);
     }
 
     @Override
@@ -87,9 +91,9 @@ public class PlatformSet2 implements GameInterface{
 
             first = false;
         }
-        canvas.drawBitmap(platform,null,plat_Rect1,null);
-        canvas.drawBitmap(platform2,null,plat_Rect2,null);
-        canvas.drawBitmap(platform3,null,plat_Rect3,null);
+        canvas.drawBitmap(platform,null,plat_Rect1,paint);
+        canvas.drawBitmap(platform2,null,plat_Rect2,paint);
+        canvas.drawBitmap(platform3,null,plat_Rect3,paint);
 
 
     }

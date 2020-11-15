@@ -15,12 +15,13 @@ public class Buttons implements GameInterface{
 
     public Buttons(Context context){
         paint = new Paint();
-        paint.setAlpha(140);
+        paint.setAlpha(160);
+        paint.setAntiAlias(false);
 
-        buttonLeft = BitmapFactory.decodeResource(context.getResources(),R.drawable.buttonleft);
-        buttonRight = BitmapFactory.decodeResource(context.getResources(),R.drawable.buttonright);
-        buttonA = BitmapFactory.decodeResource(context.getResources(),R.drawable.button1);
-        buttonB = BitmapFactory.decodeResource(context.getResources(),R.drawable.button2);
+        buttonLeft = BitmapFactory.decodeResource(context.getResources(),R.drawable.leftbutton);
+        buttonRight = BitmapFactory.decodeResource(context.getResources(),R.drawable.rightbutton);
+        buttonA = BitmapFactory.decodeResource(context.getResources(),R.drawable.buttona);
+        buttonB = BitmapFactory.decodeResource(context.getResources(),R.drawable.buttonb);
 
         buttonLeft = Bitmap.createScaledBitmap(buttonLeft,180,180,true);
         buttonRight = Bitmap.createScaledBitmap(buttonRight,180,180,true);
