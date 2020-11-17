@@ -29,16 +29,14 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
     PlatformSet2 platformSet2;
     ProgressBar progressBar;
     Buttons buttons;
-    RangedEnemy rangedEnemy;
-    playerProjectile playerProjectile;
-    EnemyProjectile enemyProjectile;
 
     public static boolean onPlatform = false;
     public static boolean isMoving = false;
     public static boolean isJump =  false;
     public static boolean moveLeft = false, moveRight = false, aPress = false, bPress = false;
     public static boolean rangedAttack = false;
-    public static int playerHealth = 100;
+    public static int playerHealth = 5;
+    public static boolean playerHit = false;
 
     public GameSurfaceView(Context context) {
         super(context);
@@ -128,7 +126,12 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
                 }else{
                     onPlatform = false;
                 }
-                //Log.i("On Platform:",String.valueOf(onPlatform));
+//                Log.i("Player Health", "Player health = "+playerHealth);
+                if (playerHit()){
+                    playerHealth --;
+                    playerHit = true;
+//                    Log.i("Player Health", "Player health = "+playerHealth);
+                }
             }
     }
 
@@ -142,7 +145,9 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
             progressBar.update();
 //            rangedEnemy.update();
         }
-        Log.i("test","is Moving = "+isMoving+ ", moveLeft = "+moveLeft+", moveRight = "+moveRight);
+//        Log.i("test","is Moving = "+isMoving+ ", moveLeft = "+moveLeft+", moveRight = "+moveRight);
+
+
     }
 
     @Override
@@ -152,7 +157,6 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
             background.render(screenCanvas);
             floor.render(screenCanvas);
             mainCharacter.render(screenCanvas);
-//            rangedEnemy.render(screenCanvas);
             platformSet1.render(screenCanvas);
             platformSet2.render(screenCanvas);
             progressBar.render(screenCanvas);
@@ -244,6 +248,26 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
         }else if (plat_copy2.intersect(player_copy.left,player_copy.top+player_copy.height()+plat_copy2.height(),player_copy.right,player_copy.bottom +plat_copy2.height())){
             return true;
         }else if (plat_copy3.intersect(player_copy.left,player_copy.top+player_copy.height()+plat_copy3.height(),player_copy.right,player_copy.bottom +plat_copy3.height())){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+//    public boolean enemyHit(){
+//        Rect enemy_copy = new Rect(rangedEnemy.enemy_rect);
+//
+//        if (enemy_copy.intersect(playerProjectile.playerProj_rect)){
+//            return true;
+//        }else{
+//            return false;
+//        }
+//    }
+
+    public boolean playerHit(){
+        Rect main_copy = new Rect(mainCharacter.frameDest);
+
+        if (main_copy.intersect(platformSet1.enemySpawn1.projectile.enemyProj_rect)){
             return true;
         }else{
             return false;
