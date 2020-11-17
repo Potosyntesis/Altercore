@@ -22,7 +22,7 @@ public class Background implements GameInterface{
     ArrayList<Rect> back_arr = new ArrayList<>();
 
     public Background(Context context ,int width, int height){
-        back = BitmapFactory.decodeResource(context.getResources(),R.drawable.citybackground);
+        back = BitmapFactory.decodeResource(context.getResources(),R.drawable.background);
         back = Bitmap.createScaledBitmap(back,width,height,true);
 
         canvas_x = width;

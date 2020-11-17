@@ -42,20 +42,25 @@ public class RangedEnemy implements GameInterface{
 
     @Override
     public void render(Canvas canvas) {
+        canvas.drawBitmap(rangedEnemy,null,enemy_rect,paint);
+        projectile.render(canvas);
         if(!fire) {
             projectile.enemyProj_rect.offsetTo(enemy_rect.left, enemy_rect.top + 100);
             fire = true;
         }
 
-        projectile.render(canvas);
 
-        if(projectile.enemyProj_rect.left>canvas.getWidth()){
+//        projectile.update();
+
+        if(projectile.enemyProj_rect.left<canvas.getWidth()){
             projectile.update();
+        }else{
+            fire = false;
         }
 
         if(projectile.enemyProj_rect.right<0){
             projectile.enemyProj_rect.offsetTo(enemy_rect.left+enemy_rect.width()/2,enemy_rect.top+100);
         }
-        canvas.drawBitmap(rangedEnemy,null,enemy_rect,paint);
+
     }
 }

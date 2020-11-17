@@ -30,12 +30,15 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
     ProgressBar progressBar;
     Buttons buttons;
     RangedEnemy rangedEnemy;
+    playerProjectile playerProjectile;
+    EnemyProjectile enemyProjectile;
 
     public static boolean onPlatform = false;
     public static boolean isMoving = false;
     public static boolean isJump =  false;
     public static boolean moveLeft = false, moveRight = false, aPress = false, bPress = false;
     public static boolean rangedAttack = false;
+    public static int playerHealth = 100;
 
     public GameSurfaceView(Context context) {
         super(context);

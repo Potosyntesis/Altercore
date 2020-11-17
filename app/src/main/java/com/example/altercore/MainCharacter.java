@@ -16,7 +16,7 @@ import static com.example.altercore.GameSurfaceView.isMoving;
 import static com.example.altercore.GameSurfaceView.moveLeft;
 import static com.example.altercore.GameSurfaceView.moveRight;
 import static com.example.altercore.GameSurfaceView.onPlatform;
-
+import static com.example.altercore.GameSurfaceView.rangedAttack;
 
 
 public class MainCharacter implements GameInterface, Runnable{
@@ -44,7 +44,7 @@ public class MainCharacter implements GameInterface, Runnable{
         projectile = new playerProjectile(context);
 
         main = BitmapFactory.decodeResource(context.getResources(),shape);
-        main = Bitmap.createScaledBitmap(main,main.getWidth()*2,main.getHeight()*2,true);
+        main = Bitmap.createScaledBitmap(main,main.getWidth(),main.getHeight(),true);
 
 
         canvas_x = width;
@@ -61,20 +61,32 @@ public class MainCharacter implements GameInterface, Runnable{
 
     @Override
     public void update() {
-        if(isMoving){
-            frameID.x++;
-        }else{
-            frameID.x = 2;
+        if(moveRight){
+            frameID.x ++;
+            frameID.y = 0;
+            frameID.x %= 3;
         }
 
-        frameID.x %= frameSize.x;
-        frameSelect = new Rect(frameID.x*main.getWidth()/frameSize.x,frameID.y*main.getHeight(),(frameID.x+1)*main.getWidth()/frameSize.x, main.getHeight());
+        if(moveLeft){
+            frameID.y = 1;
+            frameID.x++;
+            frameID.x %= 3;
+            Log.i("Test",String.valueOf(frameID.y));
+        }
+
+        if (rangedAttack){
+            frameID.y = 2;
+            frameID.x = 3;
+        }
+
+
+        frameSelect = new Rect(frameID.x*main.getWidth()/frameSize.x,frameID.y*main.getHeight()/frameSize.y,(frameID.x+1)*main.getWidth()/frameSize.x, (frameID.y+1)*main.getHeight()/frameSize.y);
 
     }
 
     @Override
     public void render(Canvas canvas) {
-        GroundPoint = (canvas.getHeight() - main.getHeight()) - floorLine;
+        GroundPoint = (canvas.getHeight() - main.getHeight()/3) - floorLine;
 
         if (moveRight){
             lookRight = true;
@@ -144,7 +156,7 @@ public class MainCharacter implements GameInterface, Runnable{
         if(!projectile.fire) {
             Rect Proj_copy = new Rect(projectile.playerProj_rect);
             if (!Proj_copy.intersect(frameDest)) {
-                projectile.playerProj_rect.offsetTo(frameDest.left, frameDest.top+60);
+                projectile.playerProj_rect.offsetTo(frameDest.left, frameDest.top+40);
 
             }
         }

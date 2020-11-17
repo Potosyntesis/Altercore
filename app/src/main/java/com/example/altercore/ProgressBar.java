@@ -24,7 +24,7 @@ public class ProgressBar implements GameInterface{
 
     @Override
     public void update() {
-
+        
     }
 
     @Override

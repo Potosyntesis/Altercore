@@ -78,6 +78,7 @@ public class PlatformSet1 implements GameInterface{
 
             if(enemySpawn1.enemy_rect.right < 0){
                 enemySpawn1.enemy_rect.offsetTo(plat_Rect2.left+(plat_Rect2.width()/2),plat_Rect2.top-enemySpawn1.enemy_rect.height());
+                enemySpawn1.paint.setAlpha(255);
             }
 
 
