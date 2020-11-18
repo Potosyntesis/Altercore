@@ -63,6 +63,9 @@ public class RangedEnemy implements GameInterface{
             }
 
             enemyAttackReset();
+        }else{
+            projectile.enemyProj_rect.offsetTo(0,0);
+            projectile.paint.setAlpha(0);
         }
 //        Log.i("test","Proj set = "+proj_setup+", fire = "+fire+", proj delay = "+proj_delay+", player hit = "+playerHit);
     }
