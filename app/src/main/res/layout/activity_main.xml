@@ -13,6 +13,8 @@
         android:scaleType="centerCrop"
         android:src="@drawable/background" />
 
+
+
 <!--    <TextView-->
 <!--        android:id="@+id/textView"-->
 <!--        android:layout_width="wrap_content"-->
@@ -90,6 +92,17 @@
         android:scaleY="1.2"
         android:src="@drawable/exit" />
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="350dp"
+        android:layout_height="260dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        app:srcCompat="@drawable/titleimage" />
 
 
 </RelativeLayout>

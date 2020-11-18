@@ -40,7 +40,8 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
     public static boolean rangedAttack = false;
     public static int playerHealth = 10;
     public static boolean playerHit = false;
-    public static boolean enemyHit = false;
+    public static boolean enemy1Hit = false;
+    public static boolean enemy2Hit = false;
 
     public GameSurfaceView(Context context) {
         super(context);
@@ -137,9 +138,22 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
                     playerHit = false;
                 }
 
-                if (enemyHit()){
+                if (enemyHit1()){
                     playerScore += 10;
+                    platformSet1.enemySpawn.paint.setAlpha(0);
+                    enemy1Hit = true;
+                    mainCharacter.fire_Proj = false;
+                }else{
+                    enemy1Hit = false;
+                }
 
+                if (enemyHit2()){
+                    playerScore += 10;
+                    platformSet2.enemySpawn.paint.setAlpha(0);
+                    enemy2Hit = true;
+                    mainCharacter.fire_Proj = false;
+                }else{
+                    enemy2Hit = false;
                 }
 
             }
@@ -261,13 +275,20 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
         }
     }
 
-    public boolean enemyHit(){
+    public boolean enemyHit1(){
         Rect enemy1_copy = new Rect(platformSet1.enemySpawn.enemy_rect);
-        Rect enemy2_copt = new Rect(platformSet2.enemySpawn.enemy_rect);
 
         if (enemy1_copy.intersect(mainCharacter.projectile.playerProj_rect)){
             return true;
-        }else if (enemy2_copt.intersect(mainCharacter.projectile.playerProj_rect)){
+        }else{
+            return false;
+        }
+    }
+
+    public boolean enemyHit2(){
+        Rect enemy2_copy = new Rect(platformSet2.enemySpawn.enemy_rect);
+
+        if (enemy2_copy.intersect(mainCharacter.projectile.playerProj_rect)){
             return true;
         }else{
             return false;

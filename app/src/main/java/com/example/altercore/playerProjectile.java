@@ -32,24 +32,12 @@ public class playerProjectile implements GameInterface {
 
     @Override
     public void update() {
-        if(rangedAttack){
-            paint.setAlpha(255);
-            fire = true;
-        }
-
-        if(fire) {
-            playerProj_rect.offset(50, 0);
-        }
+        paint.setAlpha(255);
+        playerProj_rect.offset(50, 0);
     }
 
     @Override
     public void render(Canvas canvas) {
         canvas.drawBitmap(playerProjectile,null,playerProj_rect,paint);
-
-        if (playerProj_rect.left>canvas.getWidth()){
-            paint.setAlpha(0);
-            fire = false;
-
-        }
     }
 }

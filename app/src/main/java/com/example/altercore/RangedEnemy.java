@@ -24,6 +24,7 @@ public class RangedEnemy implements GameInterface{
     private boolean proj_setup = false;
     private int proj_delay = 0;
     private boolean reset = false;
+    public boolean enemyHit = false;
 
 
     public RangedEnemy(Context context){
@@ -49,20 +50,20 @@ public class RangedEnemy implements GameInterface{
     public void render(Canvas canvas) {
         projectile.render(canvas);
         canvas.drawBitmap(rangedEnemy,null,enemy_rect,paint);
+        if (!enemyHit) {
+            if (!proj_setup) {
+                projectile.enemyProj_rect.offsetTo(enemy_rect.left + enemy_rect.width() / 2, enemy_rect.top + 100);
+                proj_setup = true;
+            }
 
-        if(!proj_setup) {
-            projectile.enemyProj_rect.offsetTo(enemy_rect.left+enemy_rect.width()/2,enemy_rect.top+100);
-            proj_setup = true;
+            if (projectile.enemyProj_rect.left < canvas.getWidth() && fire) {
+                projectile.update();
+            } else {
+                proj_setup = false;
+            }
+
+            enemyAttackReset();
         }
-
-        if(projectile.enemyProj_rect.left<canvas.getWidth() && fire){
-            projectile.update();
-        }else{
-            proj_setup = false;
-        }
-
-        enemyAttackReset();
-
 //        Log.i("test","Proj set = "+proj_setup+", fire = "+fire+", proj delay = "+proj_delay+", player hit = "+playerHit);
     }
 

@@ -9,6 +9,8 @@ import android.graphics.Rect;
 
 import java.util.Random;
 
+import static com.example.altercore.GameSurfaceView.enemy1Hit;
+import static com.example.altercore.GameSurfaceView.enemy2Hit;
 import static com.example.altercore.GameSurfaceView.moveLeft;
 import static com.example.altercore.GameSurfaceView.moveRight;
 
@@ -76,6 +78,8 @@ public class PlatformSet2 implements GameInterface{
             if(enemySpawn.enemy_rect.right < 0){
                 enemySpawn.enemy_rect.offsetTo(plat_Rect1.left+(plat_Rect1.width()/2),plat_Rect1.top-enemySpawn.enemy_rect.height());
                 enemySpawn.paint.setAlpha(255);
+                enemy2Hit = false;
+                enemySpawn.enemyHit = false;
             }
 
 
@@ -109,5 +113,8 @@ public class PlatformSet2 implements GameInterface{
         canvas.drawBitmap(platform3,null,plat_Rect3,paint);
 
         enemySpawn.render(canvas);
+        if (enemy2Hit) {
+            enemySpawn.enemyHit = true;
+        }
     }
 }

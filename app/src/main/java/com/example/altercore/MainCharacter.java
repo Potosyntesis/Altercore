@@ -31,7 +31,7 @@ public class MainCharacter implements GameInterface, Runnable{
     private boolean onGround = false;
     private boolean justLanded = true;
     private boolean lookRight = true;
-    private boolean setProj = false;
+    public boolean fire_Proj = false;
 
     Rect frameSelect;
     Rect frameDest;
@@ -106,8 +106,24 @@ public class MainCharacter implements GameInterface, Runnable{
                 screenMove = false;
             }
         }
-//        Log.i("Frame Dest: ",String.valueOf(frameDest));
+        jump();
+        playerAttack();
+        projectile.render(canvas);
+        canvas.drawBitmap(main, frameSelect, frameDest, paint);
+    }
 
+    @Override
+    public void run() {
+        while(true){
+            update();
+            try{
+                Thread.sleep(1000/updateRate);
+            }catch (Exception e){}
+        }
+    }
+
+
+    private void jump(){
         if(!onPlatform) {
             justLanded = true;
             if (isJump) {
@@ -151,32 +167,32 @@ public class MainCharacter implements GameInterface, Runnable{
                 frameDest.offset(0, 0);
             }
         }
+    }
 
-        if(!projectile.fire) {
-            Rect Proj_copy = new Rect(projectile.playerProj_rect);
-            if (!Proj_copy.intersect(frameDest)) {
-                projectile.playerProj_rect.offsetTo(frameDest.left, frameDest.top+40);
+    private void playerAttack(){
+        if (rangedAttack){
+            projectile.playerProj_rect.offsetTo(frameDest.left, frameDest.top+40);
+            fire_Proj = true;
+        }
 
-            }
+        if(projectile.playerProj_rect.left>canvas_x){
+            fire_Proj = false;
+        }
+
+        if (fire_Proj){
+            projectile.update();
+        }else if(!fire_Proj) {
+            projectile.playerProj_rect.offsetTo(0,0);
+            projectile.paint.setAlpha(0);
         }
 
 
-        projectile.render(canvas);
-        projectile.update();
-        canvas.drawBitmap(main, frameSelect, frameDest, paint);
-    }
+        Log.i("test","left = "+projectile.playerProj_rect.left+" ,top = "+projectile.playerProj_rect.top);
+        Log.i("test","fire = "+fire_Proj+" ,attack = "+rangedAttack);
+        Log.i("test","width = "+canvas_x);
 
-    @Override
-    public void run() {
-        while(true){
-            update();
-            try{
-                Thread.sleep(1000/updateRate);
-            }catch (Exception e){}
-        }
-    }
 
-    private void rangedAttack(){
+
 
     }
 }
