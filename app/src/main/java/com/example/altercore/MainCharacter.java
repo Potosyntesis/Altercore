@@ -23,15 +23,15 @@ public class MainCharacter implements GameInterface, Runnable{
 
     playerProjectile projectile;
 
-    int updateRate = 9;
-    int jumpSpeed = -25;
-    int canvas_x;
+    private int updateRate = 9;
+    private int jumpSpeed = -25;
+    private int canvas_x;
     public static int GroundPoint;
     public static boolean screenMove = false;
-    boolean onGround = false;
-    boolean justLanded = true;
-    boolean lookRight = true;
-    boolean setProj = false;
+    private boolean onGround = false;
+    private boolean justLanded = true;
+    private boolean lookRight = true;
+    private boolean setProj = false;
 
     Rect frameSelect;
     Rect frameDest;
@@ -65,21 +65,19 @@ public class MainCharacter implements GameInterface, Runnable{
             frameID.x ++;
             frameID.y = 0;
             frameID.x %= 3;
-        }
-
-        if(moveLeft){
+        }else if(moveLeft){
             frameID.y = 1;
             frameID.x++;
             frameID.x %= 3;
-            Log.i("Test",String.valueOf(frameID.y));
+        }else{
+            frameID.x = 2;
+            frameID.y = 0;
         }
 
         if (rangedAttack){
             frameID.y = 2;
             frameID.x = 3;
         }
-
-
         frameSelect = new Rect(frameID.x*main.getWidth()/frameSize.x,frameID.y*main.getHeight()/frameSize.y,(frameID.x+1)*main.getWidth()/frameSize.x, (frameID.y+1)*main.getHeight()/frameSize.y);
 
     }
@@ -88,6 +86,7 @@ public class MainCharacter implements GameInterface, Runnable{
     public void render(Canvas canvas) {
         GroundPoint = (canvas.getHeight() - main.getHeight()/3) - floorLine;
 
+        //Character Movement left and right
         if (moveRight){
             lookRight = true;
             if(frameDest.left<canvas_x/3){

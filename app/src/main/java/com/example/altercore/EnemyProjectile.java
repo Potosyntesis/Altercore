@@ -11,7 +11,6 @@ public class EnemyProjectile implements GameInterface{
 
     Bitmap enemyProjectile;
     Rect enemyProj_rect;
-    boolean offScreen = false;
     Paint paint;
 
     public EnemyProjectile(Context context){
@@ -29,7 +28,7 @@ public class EnemyProjectile implements GameInterface{
 
     @Override
     public void update() {
-//        paint.setAlpha(255);
+        paint.setAlpha(255);
         enemyProj_rect.offset(-35,0);
     }
 

@@ -14,28 +14,32 @@ import static com.example.altercore.GameSurfaceView.moveRight;
 
 public class PlatformSet2 implements GameInterface{
 
-    boolean first = true;
-    int screen_sect;
+    RangedEnemy enemySpawn;
+
+    private boolean first = true;
+    private int screen_sect;
     Rect back_rect,plat_Rect1,plat_Rect2,plat_Rect3;
     Bitmap back,platform, platform2, platform3;
     Random rand;
     Paint paint;
 
     int array_counter = 0;
-    int[] PlatformPlacment = {2,1,3,3,1,2,1,3,1,3,2,3};
+    int[] PlatformPlacment = {3,1,2,3,1,3,1,3,1,3,3,3};
 
     public PlatformSet2(Context context, int width, int height){
+        enemySpawn = new RangedEnemy(context);
+
         back = BitmapFactory.decodeResource(context.getResources(),R.drawable.citybackground);
         back = Bitmap.createScaledBitmap(back,width,height,true);
 
         platform = BitmapFactory.decodeResource(context.getResources(),R.drawable.platforms);
-        platform = Bitmap.createScaledBitmap(platform,back.getWidth()/3,(platform.getHeight()/3)*2,true);
+        platform = Bitmap.createScaledBitmap(platform,back.getWidth()/3,(platform.getHeight()/4)*2,true);
 
         platform2 = BitmapFactory.decodeResource(context.getResources(),R.drawable.platforms);
-        platform2 = Bitmap.createScaledBitmap(platform2,back.getWidth()/3,(platform2.getHeight()/3)*2,true);
+        platform2 = Bitmap.createScaledBitmap(platform2,back.getWidth()/3,(platform2.getHeight()/4)*2,true);
 
         platform3 = BitmapFactory.decodeResource(context.getResources(),R.drawable.platforms);
-        platform3 = Bitmap.createScaledBitmap(platform3,back.getWidth()/3,(platform3.getHeight()/3)*2,true);
+        platform3 = Bitmap.createScaledBitmap(platform3,back.getWidth()/3,(platform3.getHeight()/4)*2,true);
 
         back_rect = new Rect(0,0,back.getWidth(),back.getHeight());
         plat_Rect1 = new Rect(0,0,platform.getWidth(),platform.getHeight());
@@ -69,6 +73,11 @@ public class PlatformSet2 implements GameInterface{
                 }
             }
 
+            if(enemySpawn.enemy_rect.right < 0){
+                enemySpawn.enemy_rect.offsetTo(plat_Rect1.left+(plat_Rect1.width()/2),plat_Rect1.top-enemySpawn.enemy_rect.height());
+                enemySpawn.paint.setAlpha(255);
+            }
+
 
         }else if (moveLeft){
             plat_Rect1.offset(0,0);
@@ -76,18 +85,22 @@ public class PlatformSet2 implements GameInterface{
             plat_Rect3.offset(0, 0);
         }
 
+        enemySpawn.update();
+
     }
 
     @Override
     public void render(Canvas canvas) {
         if(first) {
             screen_sect = back_rect.height() / 4;
-            plat_Rect1.offsetTo(back_rect.width(), (screen_sect * PlatformPlacment[array_counter])-platform.getHeight());
+            plat_Rect1.offsetTo(back_rect.width(), (screen_sect * PlatformPlacment[array_counter])-platform.getHeight()-10);
             array_counter++;
-            plat_Rect2.offsetTo(plat_Rect1.right+250, (screen_sect * PlatformPlacment[array_counter])-platform.getHeight());
+            plat_Rect2.offsetTo(plat_Rect1.right+250, (screen_sect * PlatformPlacment[array_counter])-platform.getHeight()-10);
             array_counter++;
-            plat_Rect3.offsetTo(plat_Rect2.right+250, (screen_sect * PlatformPlacment[array_counter])-platform.getHeight());
+            plat_Rect3.offsetTo(plat_Rect2.right+250, (screen_sect * PlatformPlacment[array_counter])-platform.getHeight()-10);
             array_counter++;
+
+            enemySpawn.enemy_rect.offsetTo(plat_Rect1.left+(plat_Rect1.width()/2),plat_Rect1.top-enemySpawn.enemy_rect.height());
 
             first = false;
         }
@@ -95,6 +108,6 @@ public class PlatformSet2 implements GameInterface{
         canvas.drawBitmap(platform2,null,plat_Rect2,paint);
         canvas.drawBitmap(platform3,null,plat_Rect3,paint);
 
-
+        enemySpawn.render(canvas);
     }
 }

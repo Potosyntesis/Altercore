@@ -14,8 +14,9 @@ public class playerProjectile implements GameInterface {
 
     Bitmap playerProjectile;
     Rect playerProj_rect;
-    boolean fire = false;
     Paint paint;
+
+    public boolean fire = false;
 
 
     public playerProjectile(Context context){

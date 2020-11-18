@@ -6,14 +6,24 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import static com.example.altercore.GameSurfaceView.playerHealth;
+
 public class ProgressBar implements GameInterface{
 
     Rect back_rect,health_rect;
     Paint back_p,health_p;
 
+    private int screenWidth;
+    private int healthWidth;
+
     public ProgressBar(Context context, int width, int height){
-        back_rect = new Rect(0,0,width/2,50);
-        health_rect = new Rect(5,5,(width/2)-5,45);
+
+        screenWidth = width;
+
+        back_rect = new Rect(0,0,screenWidth/2,50);
+        health_rect = new Rect(5,5,(screenWidth/2)-5,45);
+
+        healthWidth = health_rect.width();
 
         back_p = new Paint();
         health_p = new Paint();
@@ -24,7 +34,8 @@ public class ProgressBar implements GameInterface{
 
     @Override
     public void update() {
-
+        back_rect.set(back_rect.left,back_rect.top,healthWidth+5,back_rect.bottom);
+        health_rect.set(health_rect.left,health_rect.top,(healthWidth/10)*playerHealth,health_rect.bottom);
     }
 
     @Override

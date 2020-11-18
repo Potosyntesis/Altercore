@@ -17,8 +17,7 @@ public class BottomFloor implements GameInterface{
     Bitmap bg,floor;
     Rect back_Rect;
     Canvas thisCanvas;
-    static int floorHeight = 0;
-    Thread thread;
+    private static int floorHeight = 0;
 
     int canvas_x;
 

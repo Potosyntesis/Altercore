@@ -16,8 +16,7 @@ public class Background implements GameInterface{
 
     Bitmap back;
     Canvas thisCanvas;
-    int canvas_x,canvas_y;
-    Paint paint;
+    private int canvas_x,canvas_y;
 
     ArrayList<Rect> back_arr = new ArrayList<>();
 

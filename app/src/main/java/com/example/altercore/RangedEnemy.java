@@ -20,9 +20,10 @@ public class RangedEnemy implements GameInterface{
     Bitmap rangedEnemy;
     Rect enemy_rect;
     Paint paint;
-    boolean fire = true;
-    boolean proj_set = false;
-    int proj_delay = 0;
+    private boolean fire = true;
+    private boolean proj_setup = false;
+    private int proj_delay = 0;
+    private boolean reset = false;
 
 
     public RangedEnemy(Context context){
@@ -46,37 +47,45 @@ public class RangedEnemy implements GameInterface{
 
     @Override
     public void render(Canvas canvas) {
-        canvas.drawBitmap(rangedEnemy,null,enemy_rect,paint);
         projectile.render(canvas);
-        if(!proj_set) {
+        canvas.drawBitmap(rangedEnemy,null,enemy_rect,paint);
+
+        if(!proj_setup) {
             projectile.enemyProj_rect.offsetTo(enemy_rect.left+enemy_rect.width()/2,enemy_rect.top+100);
-            proj_set = true;
+            proj_setup = true;
         }
-
-
-//        projectile.update();
 
         if(projectile.enemyProj_rect.left<canvas.getWidth() && fire){
             projectile.update();
         }else{
-            proj_set = false;
+            proj_setup = false;
         }
 
+        enemyAttackReset();
+
+//        Log.i("test","Proj set = "+proj_setup+", fire = "+fire+", proj delay = "+proj_delay+", player hit = "+playerHit);
+    }
+
+    private void enemyAttackReset(){
+
         if(projectile.enemyProj_rect.right<=0 || playerHit){
-            projectile.enemyProj_rect.offsetTo(0-projectile.enemyProj_rect.width(),projectile.enemyProj_rect.top);
-            projectile.enemyProj_rect.offset(0,0);
+            projectile.enemyProj_rect.offsetTo(0,0);
+            projectile.paint.setAlpha(0);
+            reset = true;
+        }
+
+        if (reset){
             fire = false;
-            proj_set = true;
+            proj_setup = true;
             proj_delay++;
 
             if (proj_delay>=80){
-                proj_set = false;
+                proj_setup = false;
                 fire = true;
+                reset = false;
                 proj_delay = 0;
             }
         }
-
-        Log.i("test","Proj set = "+proj_set+", fire = "+fire+", proj delay = "+proj_delay);
 
     }
 }

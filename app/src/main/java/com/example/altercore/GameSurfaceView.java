@@ -30,13 +30,17 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
     ProgressBar progressBar;
     Buttons buttons;
 
+    int playerScore = 0;
+    boolean gameOver = false;
+
     public static boolean onPlatform = false;
     public static boolean isMoving = false;
     public static boolean isJump =  false;
     public static boolean moveLeft = false, moveRight = false, aPress = false, bPress = false;
     public static boolean rangedAttack = false;
-    public static int playerHealth = 5;
+    public static int playerHealth = 10;
     public static boolean playerHit = false;
+    public static boolean enemyHit = false;
 
     public GameSurfaceView(Context context) {
         super(context);
@@ -58,7 +62,6 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
         background = new Background(getContext(),width,height);
         floor = new BottomFloor(getContext(),width,height);
         mainCharacter = new MainCharacter(getContext(),R.drawable.playerani,width);
-//        rangedEnemy = new RangedEnemy(getContext());
         platformSet1 = new PlatformSet1(getContext(),width,height);
         platformSet2 = new PlatformSet2(getContext(),width,height);
         progressBar = new ProgressBar(getContext(),width,height);
@@ -126,24 +129,30 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
                 }else{
                     onPlatform = false;
                 }
-//                Log.i("Player Health", "Player health = "+playerHealth);
+//                Log.i("test", "Player health = "+playerHealth);
                 if (playerHit()){
                     playerHealth --;
                     playerHit = true;
-//                    Log.i("Player Health", "Player health = "+playerHealth);
+                }else{
+                    playerHit = false;
                 }
+
+                if (enemyHit()){
+                    playerScore += 10;
+
+                }
+
             }
     }
 
     @Override
     public void update() {
+        progressBar.update();
         if(isMoving && screenMove) {
             background.update();
             floor.update();
             platformSet1.update();
             platformSet2.update();
-            progressBar.update();
-//            rangedEnemy.update();
         }
 //        Log.i("test","is Moving = "+isMoving+ ", moveLeft = "+moveLeft+", moveRight = "+moveRight);
 
@@ -197,7 +206,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
         deltaY = e1.getY()+velocityX- e2.getY()+velocityY;
         double degree = Math.atan2(deltaY,deltaX);
         int deg = (int) Math.toDegrees(degree);
-        Log.i("Testing"," Fling "+ deltaX +"    "+deltaY+ "tan   "+deg + " deg" );
+//        Log.i("Testing"," Fling "+ deltaX +"    "+deltaY+ "tan   "+deg + " deg" );
 
         if(deg>50 && deg<130) {
             if (isJump == false) {
@@ -219,8 +228,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
         plat_copy2.set(plat_copy2.left,plat_copy2.top + (plat_copy2.height()/2),plat_copy2.right,plat_copy2.bottom);
         plat_copy3.set(plat_copy3.left,plat_copy3.top + (plat_copy3.height()/2),plat_copy3.right,plat_copy3.bottom);
 
-        if (plat_copy1.intersect(player_copy.left,player_copy.top+player_copy.height()+plat_copy1.height(),player_copy.right,player_copy.bottom +plat_copy1.height()))
-        {
+        if (plat_copy1.intersect(player_copy.left,player_copy.top+player_copy.height()+plat_copy1.height(),player_copy.right,player_copy.bottom +plat_copy1.height())) {
             return true;
         }else if (plat_copy2.intersect(player_copy.left,player_copy.top+player_copy.height()+plat_copy2.height(),player_copy.right,player_copy.bottom +plat_copy2.height())){
             return true;
@@ -242,8 +250,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
         plat_copy2.set(plat_copy2.left,plat_copy2.top + (plat_copy2.height()/2),plat_copy2.right,plat_copy2.bottom);
         plat_copy3.set(plat_copy3.left,plat_copy3.top + (plat_copy3.height()/2),plat_copy3.right,plat_copy3.bottom);
 
-        if (plat_copy1.intersect(player_copy.left,player_copy.top+player_copy.height()+plat_copy1.height(),player_copy.right,player_copy.bottom +plat_copy1.height()))
-        {
+        if (plat_copy1.intersect(player_copy.left,player_copy.top+player_copy.height()+plat_copy1.height(),player_copy.right,player_copy.bottom +plat_copy1.height())) {
             return true;
         }else if (plat_copy2.intersect(player_copy.left,player_copy.top+player_copy.height()+plat_copy2.height(),player_copy.right,player_copy.bottom +plat_copy2.height())){
             return true;
@@ -254,20 +261,25 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
         }
     }
 
-//    public boolean enemyHit(){
-//        Rect enemy_copy = new Rect(rangedEnemy.enemy_rect);
-//
-//        if (enemy_copy.intersect(playerProjectile.playerProj_rect)){
-//            return true;
-//        }else{
-//            return false;
-//        }
-//    }
+    public boolean enemyHit(){
+        Rect enemy1_copy = new Rect(platformSet1.enemySpawn.enemy_rect);
+        Rect enemy2_copt = new Rect(platformSet2.enemySpawn.enemy_rect);
+
+        if (enemy1_copy.intersect(mainCharacter.projectile.playerProj_rect)){
+            return true;
+        }else if (enemy2_copt.intersect(mainCharacter.projectile.playerProj_rect)){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     public boolean playerHit(){
         Rect main_copy = new Rect(mainCharacter.frameDest);
 
-        if (main_copy.intersect(platformSet1.enemySpawn1.projectile.enemyProj_rect)){
+        if (main_copy.intersect(platformSet1.enemySpawn.projectile.enemyProj_rect)){
+            return true;
+        }else if (main_copy.intersect(platformSet2.enemySpawn.projectile.enemyProj_rect)){
             return true;
         }else{
             return false;
