@@ -28,6 +28,7 @@ public class RangedEnemy implements GameInterface{
 
 
     public RangedEnemy(Context context){
+        //sets the enemy
 
         projectile = new EnemyProjectile(context);
 
@@ -41,6 +42,7 @@ public class RangedEnemy implements GameInterface{
 
     @Override
     public void update() {
+        //move the enemy
         if(moveRight){
             enemy_rect.offset(-15,0);
         }
@@ -48,6 +50,7 @@ public class RangedEnemy implements GameInterface{
 
     @Override
     public void render(Canvas canvas) {
+        //draw the projectile that the enmy will shoot
         projectile.render(canvas);
         canvas.drawBitmap(rangedEnemy,null,enemy_rect,paint);
         if (!enemyHit) {
@@ -55,7 +58,7 @@ public class RangedEnemy implements GameInterface{
                 projectile.enemyProj_rect.offsetTo(enemy_rect.left + enemy_rect.width() / 2, enemy_rect.top + 100);
                 proj_setup = true;
             }
-
+            //will reset the projectile after it hits a player or will go off screen
             if (projectile.enemyProj_rect.left < canvas.getWidth() && fire) {
                 projectile.update();
             } else {
@@ -69,7 +72,7 @@ public class RangedEnemy implements GameInterface{
         }
 //        Log.i("test","Proj set = "+proj_setup+", fire = "+fire+", proj delay = "+proj_delay+", player hit = "+playerHit);
     }
-
+// reset the projectile with a delay
     private void enemyAttackReset(){
 
         if(projectile.enemyProj_rect.right<=0 || playerHit){

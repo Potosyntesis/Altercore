@@ -2,8 +2,9 @@ package com.example.altercore;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -29,6 +30,10 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
     PlatformSet2 platformSet2;
     ProgressBar progressBar;
     Buttons buttons;
+    ExplosionSound explosionSound;
+    HitSound hitSound;
+    LaserSound laserSound;
+
 
     int playerScore = 0;
     boolean gameOver = false;
@@ -49,6 +54,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
         holder.addCallback(this);
         this.setOnTouchListener(this);
         thread = new Thread(this);
+
     }
 
 
@@ -59,6 +65,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
 
     @Override
     public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
+        //initialise objects
         gestureDetector = new GestureDetector(this);
         background = new Background(getContext(),width,height);
         floor = new BottomFloor(getContext(),width,height);
@@ -67,6 +74,9 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
         platformSet2 = new PlatformSet2(getContext(),width,height);
         progressBar = new ProgressBar(getContext(),width,height);
         buttons = new Buttons(getContext());
+        explosionSound = new ExplosionSound(getContext());
+        laserSound = new LaserSound(getContext());
+        hitSound = new HitSound(getContext());
         thread.start();
     }
 
@@ -80,6 +90,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
     public boolean onTouch(View view, MotionEvent event) {
         gestureDetector.onTouchEvent(event);
 
+        //checks for button press on screen
         if (buttons.buttonLeft_r.contains((int)event.getX(),(int)event.getY())){
             isMoving = true;
             moveLeft = true;
@@ -96,10 +107,12 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
 
         if (buttons.buttonB_r.contains((int)event.getX(),(int)event.getY())){
             rangedAttack = true;
+            laserSound.play();
         }
 
         switch (event.getAction())
         {
+            //sets bool to false if button not pressed
             case MotionEvent.ACTION_UP:
             {
                 isMoving =false;
@@ -125,35 +138,55 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
                     e.printStackTrace();
                 }
                 update();
+
+                //check if player on platform
                 if (platformCollision1() || platformCollision2()){
                     onPlatform = true;
                 }else{
                     onPlatform = false;
                 }
 //                Log.i("test", "Player health = "+playerHealth);
-                if (playerHit()){
-                    playerHealth --;
-                    playerHit = true;
-                }else{
-                    playerHit = false;
-                }
 
+                //check enemy hit by projectile
                 if (enemyHit1()){
                     playerScore += 10;
                     platformSet1.enemySpawn.paint.setAlpha(0);
                     enemy1Hit = true;
                     mainCharacter.fire_Proj = false;
+                    explosionSound.play();
                 }else{
                     enemy1Hit = false;
+                    explosionSound.stop();
                 }
 
+                //check enemy hit by projectile
                 if (enemyHit2()){
                     playerScore += 10;
                     platformSet2.enemySpawn.paint.setAlpha(0);
                     enemy2Hit = true;
                     mainCharacter.fire_Proj = false;
+                    explosionSound.play();
                 }else{
                     enemy2Hit = false;
+                    explosionSound.stop();
+                }
+
+                //check player hit by projectile
+                if (playerHit()){
+                    playerHealth --;
+                    playerHit = true;
+                    mainCharacter.paint.setAlpha(0);
+                    hitSound.play();
+                }else{
+                    playerHit = false;
+                    mainCharacter.paint.setAlpha(255);
+                    hitSound.stop();
+                }
+
+                //ends the game when player health is 0
+                if(playerHealth <= 0){
+                    gameOver = true;
+                    break;
                 }
 
             }
@@ -162,6 +195,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
     @Override
     public void update() {
         progressBar.update();
+        //moves the screen to make the player move
         if(isMoving && screenMove) {
             background.update();
             floor.update();
@@ -185,6 +219,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
             progressBar.render(screenCanvas);
             buttons.render(screenCanvas);
             holder.unlockCanvasAndPost(screenCanvas);
+            //draws all the objects
         }
     }
 
@@ -215,6 +250,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        //player jump is done by fling
         float deltaX, deltaY;
         deltaX = e1.getX()+velocityX - e2.getX()+velocityY;
         deltaY = e1.getY()+velocityX- e2.getY()+velocityY;
@@ -232,6 +268,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
 
 
     public boolean platformCollision1(){
+        //platform collision for the player to stand on the platform
         Rect player_copy = new Rect(mainCharacter.frameDest);
 
         Rect plat_copy1 = new Rect(platformSet1.plat_Rect1);
@@ -254,6 +291,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
     }
 
     public boolean platformCollision2(){
+        //platform collision for the player to stand on the platform
         Rect player_copy = new Rect(mainCharacter.frameDest);
 
         Rect plat_copy1 = new Rect(platformSet2.plat_Rect1);
@@ -276,6 +314,7 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
     }
 
     public boolean enemyHit1(){
+        //enemy collision
         Rect enemy1_copy = new Rect(platformSet1.enemySpawn.enemy_rect);
 
         if (enemy1_copy.intersect(mainCharacter.projectile.playerProj_rect)){
@@ -286,6 +325,8 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
     }
 
     public boolean enemyHit2(){
+        //enemy collision
+
         Rect enemy2_copy = new Rect(platformSet2.enemySpawn.enemy_rect);
 
         if (enemy2_copy.intersect(mainCharacter.projectile.playerProj_rect)){
@@ -296,6 +337,8 @@ public class GameSurfaceView extends SurfaceView implements GameInterface,Surfac
     }
 
     public boolean playerHit(){
+        //player collision
+
         Rect main_copy = new Rect(mainCharacter.frameDest);
 
         if (main_copy.intersect(platformSet1.enemySpawn.projectile.enemyProj_rect)){

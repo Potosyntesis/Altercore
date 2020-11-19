@@ -28,6 +28,8 @@ public class BottomFloor implements GameInterface{
 
 
     public BottomFloor(Context context, int width, int height){
+        //initialise the floor and background for reference
+
         bg = BitmapFactory.decodeResource(context.getResources(),R.drawable.citybackground);
         bg = Bitmap.createScaledBitmap(bg,width,height,true);
         floor =BitmapFactory.decodeResource(context.getResources(),R.drawable.groundtile);
@@ -50,6 +52,7 @@ public class BottomFloor implements GameInterface{
 
     @Override
     public void update() {
+        //moves the floor when the player moves
         for(Rect r:floor_Arr){
             if(moveRight) {
                 r.offset(-15, 0);
@@ -64,6 +67,7 @@ public class BottomFloor implements GameInterface{
 
     @Override
     public void render(Canvas canvas) {
+        //draws the floor
         thisCanvas = canvas;
 
         for(Rect r:floor_Arr){

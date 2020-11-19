@@ -41,6 +41,7 @@ public class MainCharacter implements GameInterface, Runnable{
     Paint paint;
 
     public MainCharacter(Context context, int shape, int width){
+        //initialise
         projectile = new playerProjectile(context);
 
         main = BitmapFactory.decodeResource(context.getResources(),shape);
@@ -61,6 +62,7 @@ public class MainCharacter implements GameInterface, Runnable{
 
     @Override
     public void update() {
+        //Player animation done by sprite sheet
         if(moveRight){
             frameID.x ++;
             frameID.y = 0;
@@ -112,6 +114,7 @@ public class MainCharacter implements GameInterface, Runnable{
         canvas.drawBitmap(main, frameSelect, frameDest, paint);
     }
 
+    //to play animations
     @Override
     public void run() {
         while(true){
@@ -124,6 +127,7 @@ public class MainCharacter implements GameInterface, Runnable{
 
 
     private void jump(){
+        //jumping from the ground
         if(!onPlatform) {
             justLanded = true;
             if (isJump) {
@@ -145,6 +149,7 @@ public class MainCharacter implements GameInterface, Runnable{
                 frameDest.offsetTo(frameDest.left, GroundPoint);
             }
         }else{
+            //jumping from the platform
             if(justLanded) {
                 jumpSpeed = -25;
                 isJump = false;
@@ -170,6 +175,8 @@ public class MainCharacter implements GameInterface, Runnable{
     }
 
     private void playerAttack(){
+
+        //fire projectile if button pressed and reset
         if (rangedAttack){
             projectile.playerProj_rect.offsetTo(frameDest.left, frameDest.top+40);
             fire_Proj = true;
@@ -185,14 +192,6 @@ public class MainCharacter implements GameInterface, Runnable{
             projectile.playerProj_rect.offsetTo(0,0);
             projectile.paint.setAlpha(0);
         }
-
-
-        Log.i("test","left = "+projectile.playerProj_rect.left+" ,top = "+projectile.playerProj_rect.top);
-        Log.i("test","fire = "+fire_Proj+" ,attack = "+rangedAttack);
-        Log.i("test","width = "+canvas_x);
-
-
-
 
     }
 }

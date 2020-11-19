@@ -14,6 +14,7 @@ import static com.example.altercore.GameSurfaceView.enemy2Hit;
 import static com.example.altercore.GameSurfaceView.moveLeft;
 import static com.example.altercore.GameSurfaceView.moveRight;
 
+//All the samethings as platform set one, will draw another set of platforms to fill in space and spawn more enemies
 public class PlatformSet2 implements GameInterface{
 
     RangedEnemy enemySpawn;

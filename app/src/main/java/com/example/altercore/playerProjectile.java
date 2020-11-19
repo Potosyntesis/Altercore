@@ -20,6 +20,7 @@ public class playerProjectile implements GameInterface {
 
 
     public playerProjectile(Context context){
+        //draw player projectile
         playerProjectile = BitmapFactory.decodeResource(context.getResources(),R.drawable.projectile1);
         playerProjectile = Bitmap.createScaledBitmap(playerProjectile,playerProjectile.getWidth()/2,playerProjectile.getHeight()/2,true);
         playerProj_rect = new Rect(0,0,playerProjectile.getWidth(),playerProjectile.getHeight());
@@ -32,6 +33,7 @@ public class playerProjectile implements GameInterface {
 
     @Override
     public void update() {
+        //move projectile
         paint.setAlpha(255);
         playerProj_rect.offset(50, 0);
     }

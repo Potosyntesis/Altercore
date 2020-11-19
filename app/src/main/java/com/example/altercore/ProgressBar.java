@@ -18,6 +18,7 @@ public class ProgressBar implements GameInterface{
 
     public ProgressBar(Context context, int width, int height){
 
+        //make a custom progress bar with rects
         screenWidth = width;
 
         back_rect = new Rect(0,0,screenWidth/2,50);
@@ -34,12 +35,14 @@ public class ProgressBar implements GameInterface{
 
     @Override
     public void update() {
+        //redraw the progress par to got down for player health
         back_rect.set(back_rect.left,back_rect.top,healthWidth+5,back_rect.bottom);
         health_rect.set(health_rect.left,health_rect.top,(healthWidth/10)*playerHealth,health_rect.bottom);
     }
 
     @Override
     public void render(Canvas canvas) {
+        //draw the progress bar
         back_rect.offsetTo(10,10);
         health_rect.offsetTo(15,15);
 

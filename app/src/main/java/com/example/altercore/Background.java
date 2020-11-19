@@ -35,6 +35,7 @@ public class Background implements GameInterface{
 
     @Override
     public void update() {
+        //Moves the background on the screen
         for (Rect r:back_arr)
         {
             if(moveRight) {
@@ -51,6 +52,7 @@ public class Background implements GameInterface{
 
     @Override
     public void render(Canvas canvas) {
+        //draws the background
         thisCanvas = canvas;
 
         for (Rect r : back_arr) {

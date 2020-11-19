@@ -14,6 +14,8 @@ public class EnemyProjectile implements GameInterface{
     Paint paint;
 
     public EnemyProjectile(Context context){
+        //initialise the image
+
         enemyProjectile = BitmapFactory.decodeResource(context.getResources(),R.drawable.projectile2);
         enemyProjectile = Bitmap.createScaledBitmap(enemyProjectile,enemyProjectile.getWidth()/2,enemyProjectile.getHeight()/2,true);
 
@@ -28,12 +30,14 @@ public class EnemyProjectile implements GameInterface{
 
     @Override
     public void update() {
+        //moves the porjectile
         paint.setAlpha(255);
         enemyProj_rect.offset(-35,0);
     }
 
     @Override
     public void render(Canvas canvas) {
+        //draws the projectile
         canvas.drawBitmap(enemyProjectile,null,enemyProj_rect,paint);
 
     }

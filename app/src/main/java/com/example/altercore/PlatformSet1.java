@@ -29,6 +29,7 @@ public class PlatformSet1 implements GameInterface{
 
 
     public PlatformSet1(Context context, int width, int height){
+        //draws set of platform and will spawn enemy on platform
         enemySpawn = new RangedEnemy(context);
 
         back = BitmapFactory.decodeResource(context.getResources(),R.drawable.citybackground);
@@ -55,6 +56,7 @@ public class PlatformSet1 implements GameInterface{
 
     @Override
     public void update() {
+        //move the platform
         if (moveRight) {
             plat_Rect1.offset(-15, 0);
             plat_Rect2.offset(-15, 0);
@@ -63,6 +65,7 @@ public class PlatformSet1 implements GameInterface{
             if(array_counter > 11){
                 array_counter = 0;
             }else {
+                //will replace the platform after it goes off screen
                 if (plat_Rect1.right < 0) {
                     plat_Rect1.offsetTo(back_rect.width(), (screen_sect * PlatformPlacment[array_counter]) - platform.getHeight());
                     array_counter++;
@@ -75,6 +78,7 @@ public class PlatformSet1 implements GameInterface{
                 }
             }
 
+            //spawn enemy after it goes off screen
             if(enemySpawn.enemy_rect.right < 0){
                 enemySpawn.enemy_rect.offsetTo(plat_Rect2.left+(plat_Rect2.width()/2),plat_Rect2.top-enemySpawn.enemy_rect.height());
                 enemySpawn.paint.setAlpha(255);
@@ -83,6 +87,7 @@ public class PlatformSet1 implements GameInterface{
             }
 
 
+            //stop platform when player goes left
         }else if (moveLeft){
             plat_Rect1.offset(0,0);
             plat_Rect2.offset(0, 0);
@@ -95,6 +100,7 @@ public class PlatformSet1 implements GameInterface{
     @Override
     public void render(Canvas canvas) {
         if(first) {
+            //draw platform
             screen_sect = back_rect.height() / 4;
             plat_Rect1.offsetTo(back_rect.width(), (screen_sect * PlatformPlacment[array_counter])-platform.getHeight()-10);
             array_counter++;
@@ -111,6 +117,7 @@ public class PlatformSet1 implements GameInterface{
         canvas.drawBitmap(platform2,null,plat_Rect2,paint);
         canvas.drawBitmap(platform3,null,plat_Rect3,paint);
 
+        //draw enemy
         enemySpawn.render(canvas);
         if (enemy1Hit) {
             enemySpawn.enemyHit = true;

@@ -18,6 +18,8 @@ public class Buttons implements GameInterface{
         paint.setAlpha(160);
         paint.setAntiAlias(false);
 
+        //initialise the button images
+
         buttonLeft = BitmapFactory.decodeResource(context.getResources(),R.drawable.leftbutton);
         buttonRight = BitmapFactory.decodeResource(context.getResources(),R.drawable.rightbutton);
         buttonA = BitmapFactory.decodeResource(context.getResources(),R.drawable.buttona);
@@ -41,6 +43,7 @@ public class Buttons implements GameInterface{
 
     @Override
     public void render(Canvas canvas) {
+        //draws the buttons
         canvas.drawBitmap(buttonLeft,null,buttonLeft_r,paint);
         canvas.drawBitmap(buttonRight,null,buttonRight_r,paint);
         canvas.drawBitmap(buttonA,null,buttonA_r,paint);
